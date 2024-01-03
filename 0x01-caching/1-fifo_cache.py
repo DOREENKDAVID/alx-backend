@@ -3,6 +3,7 @@
 
 
 from base_caching import BaseCaching
+from collections import OrderedDict
 
 
 class FIFOCache(BaseCaching):
@@ -12,7 +13,7 @@ class FIFOCache(BaseCaching):
         """initialize class"""
         super().__init__()
 
-        self.cache_data = {}
+        self.cache_data = OrderedDict() 
 
     def put(self, key, item):
         """ Add an item in the cache
@@ -22,8 +23,7 @@ class FIFOCache(BaseCaching):
 
         if len(self.cache_data) >= BaseCaching.MAX_ITEMS:
             # get the oldest key using an iterator and next
-            oldest_key = next(iter(self.cache_data))
-            del(self.cache_data[oldest_key])
+            oldest_key, _ = self.cache_data.popitem(False)
             print("DISCARD:", oldest_key)
 
         self.cache_data[key] = item
@@ -31,6 +31,6 @@ class FIFOCache(BaseCaching):
     def get(self, item):
         """Get an item by key
         """
-        if item is None or utem not in self.cache_data:
+        if item is None or item not in self.cache_data:
             return None
-        return self.cache_data.get(key)
+        return self.cache_data.get(key, None)
