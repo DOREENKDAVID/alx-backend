@@ -13,35 +13,25 @@ class LRUCache(BaseCaching):
     def __init__(self):
         """initialize class"""
         super().__init__()
-
-        self.cache_data = {}
-
-        self.usage_tracker = OrderedDict()
+        self.cache_data = OrderedDict()
 
     def put(self, key, item):
-        """ Add an item in the cache
+        """Adds an item in the cache.
         """
         if key is None or item is None:
             return
-
-        # If the key exists, update its usage
-        if key in self.cache_data:
-            del self.usage_tracker[key]
-
-        # If cache is full, remove the least recently used item
-        elif len(self.cache_data) >= BaseCaching.MAX_ITEMS:
-            lru_key, _ = self.usage_tracker.popitem(last=False)
-            if lru_key in self.cache_data:
-                del self.cache_data[lru_key]
+        if key not in self.cache_data:
+            if len(self.cache_data) + 1 > BaseCaching.MAX_ITEMS:
+                lru_key, _ = self.cache_data.popitem(True)
                 print("DISCARD:", lru_key)
-
-        self.cache_data[key] = item
-        # Update usage of current key
-        self.usage_tracker[key] = 1
+            self.cache_data[key] = item
+            self.cache_data.move_to_end(key, last=False)
+        else:
+            self.cache_data[key] = item
 
     def get(self, key):
-        """ Get an item by key
+        """Retrieves an item by key.
         """
-        if key is None or key not in self.cache_data:
-            return None
-        return self.cache_data[key]
+        if key is not None and key in self.cache_data:
+            self.cache_data.move_to_end(key, last=False)
+        return self.cache_data.get(key, None)
