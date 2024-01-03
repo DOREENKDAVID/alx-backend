@@ -26,10 +26,9 @@ class FIFOCache(BaseCaching):
             oldest_key, _ = self.cache_data.popitem(False)
             print("DISCARD:", oldest_key)
 
-
     def get(self, item):
         """Get an item by key
         """
         if item is None or item not in self.cache_data:
             return None
-        return self.cache_data.get(key)
+        return self.cache_data.get(key, None)
