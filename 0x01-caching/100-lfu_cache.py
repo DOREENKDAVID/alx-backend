@@ -7,9 +7,8 @@ from collections import defaultdict, OrderedDict
 
 
 class LFUCache(BaseCaching):
-    """least frequently used block replacement algorithim 
+    """least frequently used block replacement algorithim
     when cache is full"""
-
 
     def __init__(self):
         """initialize class"""
